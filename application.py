@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from PIL import Image, ImageTk
-from Tkinter import Frame, Tk, BOTH, Menu, Label, Button, END, BOTTOM
-import tkFileDialog 
+from Tkinter import Frame, Tk, BOTH, Menu, Label, Button, BOTTOM
+import tkFileDialog, pitrain
 
 class Application(Frame):
   
