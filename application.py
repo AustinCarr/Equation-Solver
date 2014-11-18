@@ -38,7 +38,7 @@ class Application(Frame):
         self.parent.title("Equations!")
         self.pack(fill=BOTH, expand=1)
 
-        uploadFile = Image.open('upload.png')
+        uploadFile = Image.open('resources/upload.png')
         uploadPic = ImageTk.PhotoImage(uploadFile)
         self.uploadLabel = Label(self, image=uploadPic)
         self.uploadLabel.image = uploadPic
@@ -93,99 +93,99 @@ class Application(Frame):
         self.columnconfigure(0, minsize=390)
         self.rowconfigure(0, minsize=125)
 
-        buttonImg_1 = ImageTk.PhotoImage(file="button_one.png")
-        buttonImg_1_dwn = ImageTk.PhotoImage(file="button_one_dwn.png")
+        buttonImg_1 = ImageTk.PhotoImage(file="resources/button_one.png")
+        buttonImg_1_dwn = ImageTk.PhotoImage(file="resources/button_one_dwn.png")
         self.button_1 = Label(self, image=buttonImg_1, cursor="pointinghand")
         self.button_1.image = buttonImg_1
         self.button_1.bind("<ButtonRelease-1>", lambda event: self.button_1.configure(image=buttonImg_1))
         self.button_1.grid(row=0, column=1, sticky=S)
 
-        buttonImg_2 = ImageTk.PhotoImage(file="button_two.png")
-        buttonImg_2_dwn = ImageTk.PhotoImage(file="button_two_dwn.png")
+        buttonImg_2 = ImageTk.PhotoImage(file="resources/button_two.png")
+        buttonImg_2_dwn = ImageTk.PhotoImage(file="resources/button_two_dwn.png")
         self.button_2 = Label(self, image=buttonImg_2, cursor="pointinghand")
         self.button_2.image = buttonImg_2
         self.button_2.bind("<ButtonRelease-1>", lambda event: self.button_2.configure(image=buttonImg_2))
         self.button_2.grid(row=0, column=2, sticky=S)
 
-        buttonImg_3 = ImageTk.PhotoImage(file="button_three.png")
-        buttonImg_3_dwn = ImageTk.PhotoImage(file="button_three_dwn.png")
+        buttonImg_3 = ImageTk.PhotoImage(file="resources/button_three.png")
+        buttonImg_3_dwn = ImageTk.PhotoImage(file="resources/button_three_dwn.png")
         self.button_3 = Label(self, image=buttonImg_3, cursor="pointinghand")
         self.button_3.image = buttonImg_3
         self.button_3.bind("<ButtonRelease-1>", lambda event: self.button_3.configure(image=buttonImg_3))
         self.button_3.grid(row=0, column=3, sticky=S)
 
-        buttonImg_divide = ImageTk.PhotoImage(file="button_divide.png")
-        buttonImg_divide_dwn = ImageTk.PhotoImage(file="button_divide_dwn.png")
+        buttonImg_divide = ImageTk.PhotoImage(file="resources/button_divide.png")
+        buttonImg_divide_dwn = ImageTk.PhotoImage(file="resources/button_divide_dwn.png")
         self.button_divide = Label(self, image=buttonImg_divide, cursor="pointinghand")
         self.button_divide.image = buttonImg_divide
         self.button_divide.bind("<ButtonRelease-1>", lambda event: self.button_divide.configure(image=buttonImg_divide))
         self.button_divide.grid(row=0, column=4, sticky=S)
 
-        buttonImg_4 = ImageTk.PhotoImage(file="button_four.png")
-        buttonImg_4_dwn = ImageTk.PhotoImage(file="button_four_dwn.png")
+        buttonImg_4 = ImageTk.PhotoImage(file="resources/button_four.png")
+        buttonImg_4_dwn = ImageTk.PhotoImage(file="resources/button_four_dwn.png")
         self.button_4 = Label(self, image=buttonImg_4, cursor="pointinghand")
         self.button_4.image = buttonImg_4
         self.button_4.bind("<ButtonRelease-1>", lambda event: self.button_4.configure(image=buttonImg_4))
         self.button_4.grid(row=1, column=1)
 
-        buttonImg_5 = ImageTk.PhotoImage(file="button_five.png")
-        buttonImg_5_dwn = ImageTk.PhotoImage(file="button_five_dwn.png")
+        buttonImg_5 = ImageTk.PhotoImage(file="resources/button_five.png")
+        buttonImg_5_dwn = ImageTk.PhotoImage(file="resources/button_five_dwn.png")
         self.button_5 = Label(self, image=buttonImg_5, cursor="pointinghand")
         self.button_5.image = buttonImg_5
         self.button_5.bind("<ButtonRelease-1>", lambda event: self.button_5.configure(image=buttonImg_5))
         self.button_5.grid(row=1, column=2)
 
-        buttonImg_6 = ImageTk.PhotoImage(file="button_six.png")
-        buttonImg_6_dwn = ImageTk.PhotoImage(file="button_six_dwn.png")
+        buttonImg_6 = ImageTk.PhotoImage(file="resources/button_six.png")
+        buttonImg_6_dwn = ImageTk.PhotoImage(file="resources/button_six_dwn.png")
         self.button_6 = Label(self, image=buttonImg_6, cursor="pointinghand")
         self.button_6.image = buttonImg_6
         self.button_6.bind("<ButtonRelease-1>", lambda event: self.button_6.configure(image=buttonImg_6))
         self.button_6.grid(row=1, column=3)
 
-        buttonImg_multiply = ImageTk.PhotoImage(file="button_multiply.png")
-        buttonImg_multiply_dwn = ImageTk.PhotoImage(file="button_multiply_dwn.png")
+        buttonImg_multiply = ImageTk.PhotoImage(file="resources/button_multiply.png")
+        buttonImg_multiply_dwn = ImageTk.PhotoImage(file="resources/button_multiply_dwn.png")
         self.button_multiply = Label(self, image=buttonImg_multiply, cursor="pointinghand")
         self.button_multiply.image = buttonImg_multiply
         self.button_multiply.bind("<ButtonRelease-1>", lambda event: self.button_multiply.configure(image=buttonImg_multiply))
         self.button_multiply.grid(row=1, column=4)
 
-        buttonImg_7 = ImageTk.PhotoImage(file="button_seven.png")
-        buttonImg_7_dwn = ImageTk.PhotoImage(file="button_seven_dwn.png")
+        buttonImg_7 = ImageTk.PhotoImage(file="resources/button_seven.png")
+        buttonImg_7_dwn = ImageTk.PhotoImage(file="resources/button_seven_dwn.png")
         self.button_7 = Label(self, image=buttonImg_7, cursor="pointinghand")
         self.button_7.image = buttonImg_7
         self.button_7.bind("<ButtonRelease-1>", lambda event: self.button_7.configure(image=buttonImg_7))
         self.button_7.grid(row=2, column=1)
 
-        buttonImg_8 = ImageTk.PhotoImage(file="button_eight.png")
-        buttonImg_8_dwn = ImageTk.PhotoImage(file="button_eight_dwn.png")
+        buttonImg_8 = ImageTk.PhotoImage(file="resources/button_eight.png")
+        buttonImg_8_dwn = ImageTk.PhotoImage(file="resources/button_eight_dwn.png")
         self.button_8 = Label(self, image=buttonImg_8, cursor="pointinghand")
         self.button_8.image = buttonImg_8
         self.button_8.bind("<ButtonRelease-1>", lambda event: self.button_8.configure(image=buttonImg_8))
         self.button_8.grid(row=2, column=2)
 
-        buttonImg_9 = ImageTk.PhotoImage(file="button_nine.png")
-        buttonImg_9_dwn = ImageTk.PhotoImage(file="button_nine_dwn.png")
+        buttonImg_9 = ImageTk.PhotoImage(file="resources/button_nine.png")
+        buttonImg_9_dwn = ImageTk.PhotoImage(file="resources/button_nine_dwn.png")
         self.button_9 = Label(self, image=buttonImg_9, cursor="pointinghand")
         self.button_9.image = buttonImg_9
         self.button_9.bind("<ButtonRelease-1>", lambda event: self.button_9.configure(image=buttonImg_9))
         self.button_9.grid(row=2, column=3)
 
-        buttonImg_subtract = ImageTk.PhotoImage(file="button_subtract.png")
-        buttonImg_subtract_dwn = ImageTk.PhotoImage(file="button_subtract_dwn.png")
+        buttonImg_subtract = ImageTk.PhotoImage(file="resources/button_subtract.png")
+        buttonImg_subtract_dwn = ImageTk.PhotoImage(file="resources/button_subtract_dwn.png")
         self.button_subtract = Label(self, image=buttonImg_subtract, cursor="pointinghand")
         self.button_subtract.image = buttonImg_subtract
         self.button_subtract.bind("<ButtonRelease-1>", lambda event: self.button_subtract.configure(image=buttonImg_subtract))
         self.button_subtract.grid(row=2, column=4)
 
-        buttonImg_0 = ImageTk.PhotoImage(file="button_zero.png")
-        buttonImg_0_dwn = ImageTk.PhotoImage(file="button_zero_dwn.png")
+        buttonImg_0 = ImageTk.PhotoImage(file="resources/button_zero.png")
+        buttonImg_0_dwn = ImageTk.PhotoImage(file="resources/button_zero_dwn.png")
         self.button_0 = Label(self, image=buttonImg_0, cursor="pointinghand")
         self.button_0.image = buttonImg_0
         self.button_0.bind("<ButtonRelease-1>", lambda event: self.button_0.configure(image=buttonImg_0))
         self.button_0.grid(row=3, column=2)
 
-        buttonImg_add = ImageTk.PhotoImage(file="button_add.png")
-        buttonImg_add_dwn = ImageTk.PhotoImage(file="button_add_dwn.png")
+        buttonImg_add = ImageTk.PhotoImage(file="resources/button_add.png")
+        buttonImg_add_dwn = ImageTk.PhotoImage(file="resources/button_add_dwn.png")
         self.button_add = Label(self, image=buttonImg_add, cursor="pointinghand")
         self.button_add.image = buttonImg_add
         self.button_add.bind("<ButtonRelease-1>", lambda event: self.button_add.configure(image=buttonImg_add))
@@ -249,7 +249,7 @@ class Application(Frame):
         responses = np.array(responses,np.float32)
         responses = responses.reshape((responses.size,1))
 
-        trainingCompFile = Image.open('trainingcompleted.png')
+        trainingCompFile = Image.open('resources/trainingcompleted.png')
         trainingCompPic = ImageTk.PhotoImage(trainingCompFile)
         self.uploadLabel = Label(self, image=trainingCompPic)
         self.uploadLabel.image = trainingCompPic

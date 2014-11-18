@@ -11,7 +11,7 @@ model.train(samples,responses)
 
 ############################# testing part  #########################
 
-im = cv2.imread('helvtrain.png')
+im = cv2.imread('images/helvtrain.png')
 gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 
 #im2 = cv2.imread('helv_match_5.png')
