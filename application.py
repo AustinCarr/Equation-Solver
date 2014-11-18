@@ -78,20 +78,17 @@ class Application(Frame):
         global waitingForKey, trainingValue
         waitingForKey = True
         trainingValue = 99
+
         im = cv2.imread(imageFile)
-        im3 = im.copy()
 
-        gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray,(5,5),0)
-        thresh = cv2.adaptiveThreshold(blur,255,1,1,11,2)
-
-        #################      Now finding Contours         ###################
+        grayScale = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+        #blur = cv2.GaussianBlur(grayScale,(5,5),0)
+        thresh = cv2.adaptiveThreshold(grayScale,255,1,1,11,2)
 
         contours,hierarchy = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_NONE)
 
         samples =  np.empty((0,100))
         responses = []
-        keys = [i for i in range(48,58)]
 
         self.columnconfigure(0, minsize=390)
         self.rowconfigure(0, minsize=125)
