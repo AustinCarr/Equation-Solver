@@ -61,8 +61,6 @@ class Application(Frame):
 
         if filename != '':
             self.train(filename)
-            #print("python pitrain.py " + filename)
-            #os.system("python pitrain.py " + filename)
 
     def openSolve(self):
         self.uploadLabel.grid_remove()
@@ -74,21 +72,6 @@ class Application(Frame):
         
         if filename != '':
             self.solve(filename)
-            #print("python pitrain.py " + filename)
-            #os.system("python pitrain.py " + filename)
-
-
-    def readFile(self, filename):
-        picFile = Image.open(filename)
-        #if the file is too big for the screen
-        if picFile.size[0] > (self.width - (self.padding*2)):
-            picFile.thumbnail((590,300), Image.ANTIALIAS) #weird padding issues make this number not even
-        #picture = ImageTk.PhotoImage(picFile)
-        #label = Label(self, image=picture)
-        #label.image = picture
-        #self.imageLabel.grid_remove() #remove the previous image if there is one
-        #label.grid(row=0)
-        #self.imageLabel = label #set this image to the global image
 
     def train(self, imageFile):
         global waitingForKey, trainingValue
@@ -98,7 +81,6 @@ class Application(Frame):
         im = cv2.imread(imageFile)
 
         grayScale = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-        #blur = cv2.GaussianBlur(grayScale,(5,5),0)
         thresh = cv2.adaptiveThreshold(grayScale,255,1,1,11,2)
 
         contours,hierarchy = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_NONE)
@@ -207,21 +189,15 @@ class Application(Frame):
         self.button_add.bind("<ButtonRelease-1>", lambda event: self.button_add.configure(image=buttonImg_add))
         self.button_add.grid(row=3, column=4)
 
-        for cnt in contours:
-            if cv2.contourArea(cnt)>50:
-                [x,y,w,h] = cv2.boundingRect(cnt)
+        for contour in contours:
+            if cv2.contourArea(contour)>50:
+                [x,y,w,h] = cv2.boundingRect(contour)
                 if  ((h>40) or (h > 28 and h < 33) or (h > 3 and h < 7)):
-                    #cv2.rectangle(im,(x,y),(x+w,y+h),(255,0,0),0)
-                    roi = thresh[y:y+h,x:x+w]
-                    roismall = cv2.resize(roi,(10,10))
+                    regionOfInterest = thresh[y:y+h,x:x+w]
+                    regionOfInterestSmall = cv2.resize(regionOfInterest,(10,10))
                     crop = im[y:y+h, x:x+w]
                     constant= cv2.copyMakeBorder(crop,100,100,100,100,cv2.BORDER_CONSTANT,value=(255,255,255))
-                    #cv2.imshow('norm',constant)
                     a = Image.fromarray(constant)
-                    #a = Image.open(imageFile)
-                    #b = ImageTk.PhotoImage(image=a)
-                    #app.imageLabel.configure(image=b)
-                    #app.update()
 
                     picture = ImageTk.PhotoImage(a)
                     label = Label(self, image=picture)
@@ -229,7 +205,6 @@ class Application(Frame):
                     self.imageLabel.grid_remove() #remove the previous image if there is one
                     label.grid(row=0, column=0, rowspan=4)
                     self.imageLabel = label #set this image to the global image
-
 
 
                     while(waitingForKey):
@@ -249,16 +224,8 @@ class Application(Frame):
                         self.button_add.bind("<Button-1>", lambda event: callback(event, 14, self.button_add, buttonImg_add_dwn))
                         self.update()
 
-                    #key = cv2.waitKey(0)
-
-                    #if key == 27:  # (escape to quit)
-                    #    sys.exit()
-                    #elif key in keys:
-                    #    responses.append((chr(key)))
-                    #    sample = roismall.reshape((1,100))
-                    #    samples = np.append(samples,sample,0)
                     responses.append(trainingValue)
-                    sample = roismall.reshape((1,100))
+                    sample = regionOfInterestSmall.reshape((1,100))
                     samples = np.append(samples,sample,0)
                     waitingForKey = True
 
@@ -304,25 +271,14 @@ class Application(Frame):
             solutionLabel.grid(row=0,column=(6+x))
 
     def solve(self, imageFile):
-        #######   training part    ############### 
         samples = np.loadtxt('generalsamples.data',np.float32)
         responses = np.loadtxt('generalresponses.data',np.float32)
         responses = responses.reshape((responses.size,1))
 
         model = cv2.KNearest()
         model.train(samples,responses)
-
-        ############################# testing part  #########################
-
         im = cv2.imread(imageFile)
         gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-
-        #im2 = cv2.imread('helv_match_5.png')
-        #gray2 = cv2.cvtColor(im2,cv2.COLOR_BGR2GRAY)
-
-        #ret,thresh2 = cv2.threshold(gray2,127,255,0)
-        #thresh2 = cv2.adaptiveThreshold(gray2,255,1,1,11,2)
-        #contours2, hierarchy = cv2.findContours(thresh2,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
         xValues = {}
 
@@ -332,17 +288,16 @@ class Application(Frame):
 
         contours,hierarchy = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
-        for cnt in contours:
+        for contour in contours:
             index = 0
-            if cv2.contourArea(cnt)>50:
-                [x,y,w,h] = cv2.boundingRect(cnt)
+            if cv2.contourArea(contour)>50:
+                [x,y,w,h] = cv2.boundingRect(contour)
                 if  ((h>40) or (h > 28 and h < 33) or (h > 3 and h < 7)):
-                    #cv2.rectangle(im,(x,y),(x+w,y+h),(255,0,0),2)
-                    roi = thresh[y:y+h,x:x+w]
-                    roismall = cv2.resize(roi,(10,10))
-                    roismall = roismall.reshape((1,100))
-                    roismall = np.float32(roismall)
-                    retval, results, neigh_resp, dists = model.find_nearest(roismall, k = 1)
+                    regionOfInterest = thresh[y:y+h,x:x+w]
+                    regionOfInterestSmall = cv2.resize(regionOfInterest,(10,10))
+                    regionOfInterestSmall = regionOfInterestSmall.reshape((1,100))
+                    regionOfInterestSmall = np.float32(regionOfInterestSmall)
+                    retval, results, neigh_resp, dists = model.find_nearest(regionOfInterestSmall, k = 1)
                     string = str(int((results[0][0])))
                     if(string == "14"):
                         string = "+"
@@ -361,22 +316,13 @@ class Application(Frame):
                     label.grid(row=0, column=0, columnspan=4)
                     self.imageLabel = label #set this image to the global image
 
-
                     equalsFile = Image.open("resources/equals.png")
                     equalsImage = ImageTk.PhotoImage(equalsFile)
                     equalsLabel = Label(self, image=equalsImage)
                     equalsLabel.image = equalsImage
                     equalsLabel.grid(row=0,column=5)
-                    
-                    #ret = cv2.matchShapes(cnt,contours2[index],1,0.0)
-                    #if ret < 1.0:
-                    #    string = str(5)
-                    #cv2.drawContours(im, contours2[index], -1, (0,255,0), 3)
-                    #cv2.drawContours(im, cnt, -1, (0,255,0), 3)
-                    cv2.putText(out,string,(x,y+h),0,1,(255,255,255))
-                    #print(string)
+
                     xValues[x] = string
-                    #print(ret)
                     index+=1
 
         xSortedList = sorted(xValues)
