@@ -42,22 +42,38 @@ class Application(Frame):
         uploadPic = ImageTk.PhotoImage(uploadFile)
         self.uploadLabel = Label(self, image=uploadPic)
         self.uploadLabel.image = uploadPic
-        self.uploadLabel.grid(row=0)
+        self.uploadLabel.grid(row=0, columnspan=2)
+        self.columnconfigure(0, minsize=100)
 
-        self.openButton = Button(self, text="Import Image", command=self.onOpen, width=20, compound=BOTTOM)
-        self.openButton.grid(row=1)
+        self.trainButton = Button(self, text="Train", command=self.openTrain, width=20, compound=BOTTOM)
+        self.trainButton.grid(row=1)
 
+        self.solveButton = Button(self, text="Solve", command=self.openSolve, width=20, compound=BOTTOM)
+        self.solveButton.grid(row=1,column=1)
 
-    def onOpen(self):
+    def openTrain(self):
         self.uploadLabel.grid_remove()
-        self.openButton.grid_remove()
+        self.trainButton.grid_remove()
+        self.solveButton.grid_remove()
+        ftypes = [('Images', '*.png'), ('All files', '*')]
+        dialog = tkFileDialog.Open(self, filetypes = ftypes)
+        filename = dialog.show()
+
+        if filename != '':
+            self.train(filename)
+            #print("python pitrain.py " + filename)
+            #os.system("python pitrain.py " + filename)
+
+    def openSolve(self):
+        self.uploadLabel.grid_remove()
+        self.trainButton.grid_remove()
+        self.solveButton.grid_remove()
         ftypes = [('Images', '*.png'), ('All files', '*')]
         dialog = tkFileDialog.Open(self, filetypes = ftypes)
         filename = dialog.show()
         
         if filename != '':
-            trainFileName = self.readFile(filename)
-            self.train(filename)
+            self.solve(filename)
             #print("python pitrain.py " + filename)
             #os.system("python pitrain.py " + filename)
 
@@ -194,7 +210,7 @@ class Application(Frame):
         for cnt in contours:
             if cv2.contourArea(cnt)>50:
                 [x,y,w,h] = cv2.boundingRect(cnt)
-                if  h>40:
+                if  ((h>40) or (h > 28 and h < 33) or (h > 3 and h < 7)):
                     #cv2.rectangle(im,(x,y),(x+w,y+h),(255,0,0),0)
                     roi = thresh[y:y+h,x:x+w]
                     roismall = cv2.resize(roi,(10,10))
@@ -262,7 +278,113 @@ class Application(Frame):
         responseData = file('generalresponses.data', 'a')
         np.savetxt(responseData,responses)
         responseData.close()
-         
+
+        self.button_1.grid_remove()
+        self.button_2.grid_remove()
+        self.button_3.grid_remove()
+        self.button_4.grid_remove()
+        self.button_5.grid_remove()
+        self.button_6.grid_remove()
+        self.button_7.grid_remove()
+        self.button_8.grid_remove()
+        self.button_9.grid_remove()
+        self.button_0.grid_remove()
+        self.button_add.grid_remove()
+        self.button_subtract.grid_remove()
+        self.button_multiply.grid_remove()
+        self.button_divide.grid_remove()
+
+    def displaySolution(self, solutionString):
+        for x in range(len(solutionString)):
+            solutionFile = Image.open("resources/" + solutionString[x:x+1] + ".png")
+            solutionImage = ImageTk.PhotoImage(solutionFile)
+            solutionLabel = Label(self, image=solutionImage)
+            solutionLabel.image = solutionImage
+            self.columnconfigure((6+x), minsize=10)
+            solutionLabel.grid(row=0,column=(6+x))
+
+    def solve(self, imageFile):
+        #######   training part    ############### 
+        samples = np.loadtxt('generalsamples.data',np.float32)
+        responses = np.loadtxt('generalresponses.data',np.float32)
+        responses = responses.reshape((responses.size,1))
+
+        model = cv2.KNearest()
+        model.train(samples,responses)
+
+        ############################# testing part  #########################
+
+        im = cv2.imread(imageFile)
+        gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+
+        #im2 = cv2.imread('helv_match_5.png')
+        #gray2 = cv2.cvtColor(im2,cv2.COLOR_BGR2GRAY)
+
+        #ret,thresh2 = cv2.threshold(gray2,127,255,0)
+        #thresh2 = cv2.adaptiveThreshold(gray2,255,1,1,11,2)
+        #contours2, hierarchy = cv2.findContours(thresh2,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
+        xValues = {}
+
+        out = np.zeros(im.shape,np.uint8)
+
+        thresh = cv2.adaptiveThreshold(gray,255,1,1,11,2)
+
+        contours,hierarchy = cv2.findContours(thresh,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+
+        for cnt in contours:
+            index = 0
+            if cv2.contourArea(cnt)>50:
+                [x,y,w,h] = cv2.boundingRect(cnt)
+                if  ((h>40) or (h > 28 and h < 33) or (h > 3 and h < 7)):
+                    #cv2.rectangle(im,(x,y),(x+w,y+h),(255,0,0),2)
+                    roi = thresh[y:y+h,x:x+w]
+                    roismall = cv2.resize(roi,(10,10))
+                    roismall = roismall.reshape((1,100))
+                    roismall = np.float32(roismall)
+                    retval, results, neigh_resp, dists = model.find_nearest(roismall, k = 1)
+                    string = str(int((results[0][0])))
+                    if(string == "14"):
+                        string = "+"
+                    if(string == "13"):
+                        string = "-"
+                    if(string == "12"):
+                        string = "*"
+                    if(string == "11"):
+                        string = "/"
+
+                    uploadFile = Image.open(imageFile)
+                    picture = ImageTk.PhotoImage(uploadFile)
+                    label = Label(self, image=picture)
+                    label.image = picture
+                    self.imageLabel.grid_remove() #remove the previous image if there is one
+                    label.grid(row=0, column=0, columnspan=4)
+                    self.imageLabel = label #set this image to the global image
+
+
+                    equalsFile = Image.open("resources/equals.png")
+                    equalsImage = ImageTk.PhotoImage(equalsFile)
+                    equalsLabel = Label(self, image=equalsImage)
+                    equalsLabel.image = equalsImage
+                    equalsLabel.grid(row=0,column=5)
+                    
+                    #ret = cv2.matchShapes(cnt,contours2[index],1,0.0)
+                    #if ret < 1.0:
+                    #    string = str(5)
+                    #cv2.drawContours(im, contours2[index], -1, (0,255,0), 3)
+                    #cv2.drawContours(im, cnt, -1, (0,255,0), 3)
+                    cv2.putText(out,string,(x,y+h),0,1,(255,255,255))
+                    #print(string)
+                    xValues[x] = string
+                    #print(ret)
+                    index+=1
+
+        xSortedList = sorted(xValues)
+        equation = ""
+        for item in xSortedList:
+            equation += str(xValues[item])
+        self.displaySolution((str)(eval(equation)))
+        print(equation + "=" + (str)(eval(equation)))
 
 def main():
     root = Tk()
